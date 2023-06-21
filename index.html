@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style/style.css">
+  <link rel="stylesheet" href="./style/reset.css">
+  <link rel="stylesheet" href="./style/font.css">
+  <title>Frontend Mentor | Age calculator app</title>
+
+</head>
+
+<body>
+  <main>
+    <div class="widget">
+      <form id="form">
+        <div>
+          <label for="day">DAY</label>
+          <input type="number" name="day" placeholder="DD" required maxlength="2"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+          <p class="error-text"></p>
+        </div>
+        <div>
+          <label for="month">MONTH</label>
+          <input type="number" name="month" placeholder="MM" required maxlength="2"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+          <p class="error-text"></p>
+        </div>
+        <div>
+          <label for="year">YEAR</label>
+          <input type="number" name="year" placeholder="YYYY" required maxlength="4"
+            oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+          <p class="error-text"></p>
+        </div>
+      </form>
+
+      <div class="divider">
+        <hr>
+        <div>
+          <button type="button" class="submit-button"><img src="./assets/images/icon-arrow.svg"
+              alt="submit button"></button>
+        </div>
+      </div>
+
+      <div class="result">
+        <h2><span>--</span>years</h2>
+        <h2><span>--</span>months</h2>
+        <h2><span>--</span>days</h2>
+      </div>
+    </div>
+
+  </main>
+  <footer>
+    <div class=" attribution">
+      Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>.
+      Coded by <a href="#">David Bell</a>.
+    </div>
+  </footer>
+</body>
+<script src="./script.js"></script>
+
+</html>
