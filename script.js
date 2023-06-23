@@ -27,16 +27,14 @@ birthCalc.button.addEventListener("click", () => {
   return arrValuesToDate(+birthCalc.inputArr[0].value, +birthCalc.inputArr[1].value, +birthCalc.inputArr[2].value);
 });
 
-const months30Days = [4, 6, 9, 11];
-
 function errorAdd(i, statement) {
-  const errorStatements = [
-    "This field is required",
-    "Must be a valid day",
-    "Must be a valid month",
-    "Must be in the past",
-    "Must be a valid Date",
-  ];
+  const errorStatements = {
+    fieldRequired: "This field is required",
+    invalidDay: "Must be a valid day",
+    invalidMonth: "Must be a valid month",
+    dateInFuture: "Must be in the past",
+    invalidDate: "Must be a valid Date",
+  };
 
   birthCalc.labelsArr[i].classList.add("error-text");
   birthCalc.inputArr[i].classList.add("error-border");
@@ -50,14 +48,16 @@ function errorRemove(i) {
 }
 
 function validateDay(day, month) {
+  const monthsWith30Days = [4, 6, 9, 11];
+
   if (!day) {
-    errorAdd(0, 0);
+    errorAdd(0, "fieldRequired");
   } else if (day < 1 || day > 31) {
-    errorAdd(0, 1);
-  } else if (months30Days.includes(month) && day > 30) {
-    errorAdd(0, 4);
+    errorAdd(0, "invalidDay");
+  } else if (monthsWith30Days.includes(month) && day > 30) {
+    errorAdd(0, "invalidDate");
   } else if (month === 9 && day > 28) {
-    errorAdd(0, 4);
+    errorAdd(0, "dateInFuture");
   } else {
     errorRemove(0);
     birthCalc.paragraphArr[0].innerText = "";
@@ -67,9 +67,9 @@ function validateDay(day, month) {
 
 function validateMonth(month) {
   if (!month) {
-    errorAdd(1, 0);
+    errorAdd(1, "fieldRequired");
   } else if (month < 1 || month > 12) {
-    errorAdd(1, 2);
+    errorAdd(1, "invalidMonth");
   } else {
     errorRemove(1);
     return month;
@@ -80,9 +80,9 @@ function validateYear(year) {
   let currentDate = new Date();
   let currentYear = currentDate.getFullYear();
   if (!year) {
-    errorAdd(2, 0);
+    errorAdd(2, "fieldRequired");
   } else if (year > currentYear) {
-    errorAdd(2, 3);
+    errorAdd(2, "dateInFuture");
   } else {
     errorRemove(2);
     return year;
