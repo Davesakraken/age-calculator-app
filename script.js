@@ -1,91 +1,104 @@
+function periodConstructor(i, labels, inputs, paragraphs) {
+  return {
+    label: labels[i],
+    input: inputs[i],
+    value: +inputs[i].value,
+    errorMessage: paragraphs[i],
+    errorAdd: function (statement) {
+      this.input.classList.add("error-border");
+      this.label.classList.add("error-text");
+      this.errorMessage.innerText = statement;
+    },
+    errorRemove: function () {
+      this.input.classList.remove("error-border");
+      this.label.classList.remove("error-text");
+      this.errorMessage.innerText = "";
+    },
+  };
+}
+
 function initializeBirthCalc() {
   const formLabels = document.querySelectorAll("form label");
   const formInputs = document.querySelectorAll("form input");
   const formParagraphs = document.querySelectorAll("form p");
-  const button = document.querySelector(".submit-button");
 
-  const labelsArr = Array.from(formLabels);
-  const inputArr = Array.from(formInputs);
-  const paragraphArr = Array.from(formParagraphs);
+  const labels = Array.from(formLabels);
+  const inputs = Array.from(formInputs);
+  const paragraphs = Array.from(formParagraphs);
+
+  const day = periodConstructor(0, labels, inputs, paragraphs);
+  const month = periodConstructor(1, labels, inputs, paragraphs);
+  const year = periodConstructor(2, labels, inputs, paragraphs);
 
   return {
-    button,
-    labelsArr,
-    inputArr,
-    paragraphArr,
+    day,
+    month,
+    year,
   };
 }
 
-const birthCalc = initializeBirthCalc();
+const button = document.querySelector(".submit-button");
 
 document.addEventListener("keydown", (event) => {
   if (event.code === "Enter") {
-    return arrValuesToDate(+birthCalc.inputArr[0].value, +birthCalc.inputArr[1].value, +birthCalc.inputArr[2].value);
+    return arrValuesToDate();
   }
 });
-birthCalc.button.addEventListener("click", () => {
-  return arrValuesToDate(+birthCalc.inputArr[0].value, +birthCalc.inputArr[1].value, +birthCalc.inputArr[2].value);
+button.addEventListener("click", () => {
+  return arrValuesToDate();
 });
 
-function errorAdd(i, statement) {
-  const errorStatements = {
-    fieldRequired: "This field is required",
-    invalidDay: "Must be a valid day",
-    invalidMonth: "Must be a valid month",
-    dateInFuture: "Must be in the past",
-    invalidDate: "Must be a valid Date",
-  };
-
-  birthCalc.labelsArr[i].classList.add("error-text");
-  birthCalc.inputArr[i].classList.add("error-border");
-  birthCalc.paragraphArr[i].innerText = errorStatements[statement];
-}
-
-function errorRemove(i) {
-  birthCalc.labelsArr[i].classList.remove("error-text");
-  birthCalc.inputArr[i].classList.remove("error-border");
-  birthCalc.paragraphArr[i].innerText = "";
-}
+const errorStatements = {
+  fieldRequired: "This field is required",
+  invalidDay: "Must be a valid day",
+  invalidMonth: "Must be a valid month",
+  invalidYear: "Must be a valid year",
+  dateInFuture: "Must be in the past",
+  invalidDate: "Must be a valid Date",
+};
 
 function validateDay(day, month) {
   const monthsWith30Days = [4, 6, 9, 11];
 
-  if (!day) {
-    errorAdd(0, "fieldRequired");
-  } else if (day < 1 || day > 31) {
-    errorAdd(0, "invalidDay");
-  } else if (monthsWith30Days.includes(month) && day > 30) {
-    errorAdd(0, "invalidDate");
-  } else if (month === 9 && day > 28) {
-    errorAdd(0, "dateInFuture");
+  if (!day.value) {
+    day.errorAdd(errorStatements.fieldRequired);
+  } else if (day.value < 1 || day.value > 31) {
+    day.errorAdd(errorStatements.invalidDay);
+  } else if (monthsWith30Days.includes(month.value) && day.value >= 31) {
+    day.errorAdd(errorStatements.invalidDate);
+  } else if (month.value === 2 && day.value > 28) {
+    day.errorAdd(errorStatements.dateInFuture);
   } else {
-    errorRemove(0);
-    birthCalc.paragraphArr[0].innerText = "";
-    return day;
+    day.errorRemove();
+    day.errorMessage.innerText = "";
+    return day.value;
   }
 }
 
 function validateMonth(month) {
-  if (!month) {
-    errorAdd(1, "fieldRequired");
+  if (!month.value) {
+    month.errorAdd(errorStatements.fieldRequired);
   } else if (month < 1 || month > 12) {
-    errorAdd(1, "invalidMonth");
+    month.errorAdd(errorStatements.invalidMonth);
   } else {
-    errorRemove(1);
-    return month;
+    month.errorRemove();
+    return month.value;
   }
 }
 
 function validateYear(year) {
   let currentDate = new Date();
   let currentYear = currentDate.getFullYear();
-  if (!year) {
-    errorAdd(2, "fieldRequired");
-  } else if (year > currentYear) {
-    errorAdd(2, "dateInFuture");
+  if (!year.value) {
+    year.errorAdd(errorStatements.fieldRequired);
+  } else if (year.value.toString().length < 3) {
+    year.errorAdd(errorStatements.invalidYear);
+  } else if (year.value > currentYear) {
+    year.errorAdd(errorStatements.dateInFuture);
   } else {
-    errorRemove(2);
-    return year;
+    year.errorRemove();
+    console.log(year.value);
+    return year.value;
   }
 }
 
@@ -100,12 +113,12 @@ function validateDate(day, month, year) {
   return true;
 }
 
-function arrValuesToDate(day, month, year) {
-  if (!validateDate(day, month, year)) {
-    return;
-  }
+function arrValuesToDate() {
+  const { day, month, year } = initializeBirthCalc();
 
-  const birthDate = new Date(`${year}-${month}-${day}`);
+  if (!validateDate(day, month, year)) return;
+
+  const birthDate = new Date(`${year.value}-${month.value}-${day.value}`);
   const currentDate = new Date();
 
   const milliseconds = currentDate - birthDate;
