@@ -4,12 +4,12 @@ function periodConstructor(i, labels, inputs, paragraphs) {
     input: inputs[i],
     value: +inputs[i].value,
     errorMessage: paragraphs[i],
-    errorAdd: function (statement) {
+    errorAdd(statement) {
       this.input.classList.add("error-border");
       this.label.classList.add("error-text");
       this.errorMessage.innerText = statement;
     },
-    errorRemove: function () {
+    errorRemove() {
       this.input.classList.remove("error-border");
       this.label.classList.remove("error-text");
       this.errorMessage.innerText = "";
@@ -57,8 +57,19 @@ const errorStatements = {
   invalidDate: "Must be a valid Date",
 };
 
-function validateDay(day, month) {
+function leapYearCalculator(year) {
+  if (year % 4 === 0 && year % 100 !== 0) {
+    return true;
+  } else if (year % 100 === 0 && year % 400 === 0) {
+    return true;
+  }
+
+  return false;
+}
+
+function validateDay(day, month, year) {
   const monthsWith30Days = [4, 6, 9, 11];
+  const leapYearCheck = leapYearCalculator(year.value);
 
   if (!day.value) {
     day.errorAdd(errorStatements.fieldRequired);
@@ -66,8 +77,12 @@ function validateDay(day, month) {
     day.errorAdd(errorStatements.invalidDay);
   } else if (monthsWith30Days.includes(month.value) && day.value >= 31) {
     day.errorAdd(errorStatements.invalidDate);
-  } else if (month.value === 2 && day.value > 28) {
-    day.errorAdd(errorStatements.dateInFuture);
+  }
+  //leap year check
+  else if (leapYearCheck && month.value === 2 && day.value > 29) {
+    day.errorAdd(errorStatements.invalidDay);
+  } else if (!leapYearCheck && month.value === 2 && day.value > 28) {
+    day.errorAdd(errorStatements.invalidDay);
   } else {
     day.errorRemove();
     day.errorMessage.innerText = "";
@@ -78,7 +93,7 @@ function validateDay(day, month) {
 function validateMonth(month) {
   if (!month.value) {
     month.errorAdd(errorStatements.fieldRequired);
-  } else if (month < 1 || month > 12) {
+  } else if (month.value < 1 || month.value > 12) {
     month.errorAdd(errorStatements.invalidMonth);
   } else {
     month.errorRemove();
@@ -87,28 +102,31 @@ function validateMonth(month) {
 }
 
 function validateYear(year) {
-  let currentDate = new Date();
-  let currentYear = currentDate.getFullYear();
   if (!year.value) {
     year.errorAdd(errorStatements.fieldRequired);
-  } else if (year.value.toString().length < 3) {
+  } else if (year.value < 100) {
     year.errorAdd(errorStatements.invalidYear);
-  } else if (year.value > currentYear) {
-    year.errorAdd(errorStatements.dateInFuture);
   } else {
     year.errorRemove();
-    console.log(year.value);
     return year.value;
   }
 }
 
 function validateDate(day, month, year) {
-  const validDay = validateDay(day, month);
+  const birthDate = new Date(`${year.value}-${month.value}-${day.value}`);
+  let newDateObj = new Date();
+
+  if (newDateObj - birthDate < 0) {
+    console.log(newDateObj - birthDate);
+    year.errorAdd(errorStatements.dateInFuture);
+    return;
+  }
+
+  const validDay = validateDay(day, month, year);
   const validMonth = validateMonth(month);
   const validYear = validateYear(year);
   if (!validDay || !validMonth || !validYear) {
     return false;
-  } else {
   }
   return true;
 }
