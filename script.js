@@ -131,6 +131,36 @@ function validateDate(day, month, year) {
   return true;
 }
 
+function animateResultCount(period, resultSpan) {
+  const results = document.querySelectorAll(".result span");
+  const resultArr = Array.from(results);
+
+  let resultSpanIndex;
+
+  switch (resultSpan) {
+    case "spanYear":
+      resultSpanIndex = 0;
+      break;
+    case "spanMonths":
+      resultSpanIndex = 1;
+      break;
+    case "spanDays":
+      resultSpanIndex = 2;
+      break;
+    default:
+      console.error("animate result failed");
+  }
+
+  let countFrom = 0;
+  const countTo = period;
+
+  setInterval(function () {
+    if (countFrom <= countTo) {
+      resultArr[resultSpanIndex].innerText = countFrom++;
+    }
+  }, 20);
+}
+
 function arrValuesToDate() {
   const { day, month, year } = initializeBirthCalc();
 
@@ -148,11 +178,7 @@ function arrValuesToDate() {
   const remainingMonths = Math.floor(months % 12);
   const remainingDays = Math.floor(days % 30.4368);
 
-  const results = document.querySelectorAll(".result span");
-
-  const resultSpan = Array.from(results);
-
-  resultSpan[0].innerText = years;
-  resultSpan[1].innerText = remainingMonths;
-  resultSpan[2].innerText = remainingDays;
+  animateResultCount(years, "spanYear");
+  animateResultCount(remainingMonths, "spanMonths");
+  animateResultCount(remainingDays, "spanDays");
 }

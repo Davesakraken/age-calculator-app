@@ -132,10 +132,6 @@
       transition: background-color 200ms ease-in-out;
   }
 
-  button:hover {
-      background-color: var(--offBlack);
-  }
-
   button img {
       width: 4rem;
       height: 1.8rem;
@@ -176,7 +172,17 @@
       color: hsl(228, 45%, 44%);
   }
 
+  @media screen and (min-width: 601px) {
+      button:hover {
+          background-color: var(--offBlack);
+      }
+  }
+
   @media screen and (max-width: 600px) {
+
+      button:active {
+          background-color: var(--offBlack);
+      }
 
       h2 {
           font-size: 3.6rem;
