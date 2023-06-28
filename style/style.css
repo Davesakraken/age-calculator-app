@@ -180,12 +180,17 @@
 
   @media screen and (max-width: 600px) {
 
+      main {
+          width: 100svw;
+          height: 95svh;
+      }
+
       button:active {
           background-color: var(--offBlack);
       }
 
       h2 {
-          font-size: 3.6rem;
+          font-size: 3rem;
       }
 
       .widget {
