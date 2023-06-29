@@ -117,7 +117,6 @@ function validateDate(day, month, year) {
   let newDateObj = new Date();
 
   if (newDateObj - birthDate < 0) {
-    console.log(newDateObj - birthDate);
     year.errorAdd(errorStatements.dateInFuture);
     return;
   }
@@ -148,15 +147,16 @@ function animateResultCount(period, resultSpan) {
       resultSpanIndex = 2;
       break;
     default:
-      console.error("animate result failed");
   }
 
   let countFrom = 0;
   const countTo = period;
 
-  setInterval(function () {
+  const counter = setInterval(function () {
     if (countFrom <= countTo) {
       resultArr[resultSpanIndex].innerText = countFrom++;
+    } else {
+      clearInterval(counter);
     }
   }, 20);
 }
