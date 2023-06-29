@@ -16,20 +16,20 @@
     <div class="widget">
       <form id="form">
         <div>
-          <label for="day">DAY</label>
-          <input type="number" name="day" placeholder="DD" required maxlength="2"
+          <label for="day-input">DAY</label>
+          <input id="day-input" type="number" placeholder="DD" required maxlength="2"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <p class="error-text"></p>
         </div>
         <div>
-          <label for="month">MONTH</label>
-          <input type="number" name="month" placeholder="MM" required maxlength="2"
+          <label for="month-input">MONTH</label>
+          <input id-="month-input" type="number" placeholder="MM" required maxlength="2"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <p class="error-text"></p>
         </div>
         <div>
-          <label for="year">YEAR</label>
-          <input type="number" name="year" placeholder="YYYY" required maxlength="4"
+          <label for="year-input">YEAR</label>
+          <input id="year-input" type="number" placeholder="YYYY" required maxlength="4"
             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
           <p class="error-text"></p>
         </div>
